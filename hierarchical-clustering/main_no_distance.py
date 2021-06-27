@@ -133,8 +133,8 @@ if __name__ == "__main__":
                 'commons-cli', 'google-auto-value', 'gson', 'commons-io', 'commons-text', 'commonc-codec', ]
     projects1 = ['google-auto-common']
     reductions = [0.25, 0.5, 0.75]
-    results_df = pandas.DataFrame(columns=['project', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max'])
     for counter in range(30):
+        results_df = pandas.DataFrame(columns=['project', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max'])
         seed = random.randint(0, 99999)
         for project in projects:
             csvPath = directory + "/" + project
