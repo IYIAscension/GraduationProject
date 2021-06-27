@@ -65,7 +65,7 @@ def export_clusters(labels, csv_data, export_dir):
     return df
 
 
-def calculate_clustered_score(directory, ):
+def calculate_clustered_score(directory, seed):
     killed = pandas.read_csv(directory + "/clustering/killed.csv",
                              names=["id", "killed", " numTests"],
                              skiprows=1)
@@ -84,7 +84,7 @@ def calculate_clustered_score(directory, ):
         cluster_killed = len(tmp[tmp['killed'] == 0])
         cluster_survived = len(tmp[tmp['killed'] == 1])
         # Select x mutant from cluster
-        if tmp.sample(random_state=772120).iloc[0]['killed'] == 0:
+        if tmp.sample(random_state=seed).iloc[0]['killed'] == 0:
             killed += len(tmp)
         if cluster_killed > cluster_survived:
             curr_acc += (cluster_killed / len(tmp))
@@ -133,46 +133,48 @@ if __name__ == "__main__":
     projects1 = ['google-auto-common']
     reductions = [0.25, 0.5, 0.75]
     results_df = pandas.DataFrame(columns=['project', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max'])
-    for project in projects:
-        csvPath = directory + "/" + project
-        csvFile = Path(csvPath + "/clustering/characteristics.csv")
+    for counter in range(30):
+        seed = random.randint(0, 99999)
+        for project in projects:
+            csvPath = directory + "/" + project
+            csvFile = Path(csvPath + "/clustering/characteristics.csv")
 
-        if not csvFile.is_file():
-            print("characteristics not found: " + project)
-            continue
+            if not csvFile.is_file():
+                print("characteristics not found: " + project)
+                continue
 
-        for reduction in reductions:
+            for reduction in reductions:
 
-            data = merge_csv_files(csvPath)
+                data = merge_csv_files(csvPath)
 
-            # define ordinal encoding
-            encoder = LabelEncoder()
-            data = data[["id", "mutOperator", "opcode", "returnType",
-                         "localVarsCount", "isInTryCatch", "isInFinalBlock", "className", "methodName",
-                         "blockNumber", "lineNumber", "distance", "numTests"]]
-            # Transform each column.. do id last since we need to inverse that.
-            for col in ["mutOperator", "returnType", "className", "methodName", "id"]:
-                data[col] = encoder.fit_transform(data[col])
+                # define ordinal encoding
+                encoder = LabelEncoder()
+                data = data[["id", "mutOperator", "opcode", "returnType",
+                             "localVarsCount", "isInTryCatch", "isInFinalBlock", "className", "methodName",
+                             "blockNumber", "lineNumber", "distance", "numTests"]]
+                # Transform each column.. do id last since we need to inverse that.
+                for col in ["mutOperator", "returnType", "className", "methodName", "id"]:
+                    data[col] = encoder.fit_transform(data[col])
 
-            clustering = AgglomerativeClustering(distance_threshold=None,
-                                                 n_clusters=int(math.ceil(len(data) * reduction)),
-                                                 linkage="ward",
-                                                 compute_distances=True)
-            clustering = clustering.fit(data)
+                clustering = AgglomerativeClustering(distance_threshold=None,
+                                                     n_clusters=int(math.ceil(len(data) * reduction)),
+                                                     linkage="ward",
+                                                     compute_distances=True)
+                clustering = clustering.fit(data)
 
-            # unlabel id so we can recognize the mutants
-            data["id"] = encoder.inverse_transform(data["id"])
-            export_clusters(clustering.labels_, data, csvPath)
+                # unlabel id so we can recognize the mutants
+                data["id"] = encoder.inverse_transform(data["id"])
+                export_clusters(clustering.labels_, data, csvPath)
 
-            results = calculate_clustered_score(csvPath)
+                results = calculate_clustered_score(csvPath, seed)
 
-            results_df = results_df.append(
-                {'project': project, 'reduction': reduction, 'score': results['score'], 'acc_avg': results['acc_avg'],
-                 'acc_min': results['acc_min'], 'acc_max': results['acc_max']},
-                ignore_index=True)
-            results_df.to_csv(directory + "/results_exp_full.csv", sep=',', index=False)
+                results_df = results_df.append(
+                    {'project': project, 'reduction': reduction, 'score': results['score'], 'acc_avg': results['acc_avg'],
+                     'acc_min': results['acc_min'], 'acc_max': results['acc_max']},
+                    ignore_index=True)
+                results_df.to_csv(directory + "/results_exp_no_similarity_"+str(seed)+".csv", sep=',', index=False)
 
-    results_df.to_csv(directory + "/results_exp_full.csv", sep=',', index=False)
+        results_df.to_csv(directory + "/results_exp_no_similarity_"+str(seed)+".csv", sep=',', index=False)
 
     # plt.title('Hierarchical Clustering Dendrogram (truncated)')
     # plt.xlabel('sample index or (cluster size)')
