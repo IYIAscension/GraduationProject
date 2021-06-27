@@ -170,12 +170,14 @@ if __name__ == "__main__":
                 results = calculate_clustered_score(csvPath, seed)
 
                 results_df = results_df.append(
-                    {'project': project, 'reduction': reduction, 'score': results['score'], 'acc_avg': results['acc_avg'],
+                    {'project': project, 'reduction': reduction, 'score': results['score'],
+                     'acc_avg': results['acc_avg'],
                      'acc_min': results['acc_min'], 'acc_max': results['acc_max']},
                     ignore_index=True)
-                results_df.to_csv(directory + "/results_exp_no_similarity_"+str(seed)+".csv", sep=',', index=False)
+                results_df.to_csv(directory + "/no-distance" + "/results_exp_no_similarity_" + str(seed) + ".csv",
+                                  sep=',', index=False)
 
-        results_df.to_csv(directory + "/results_exp_no_similarity_"+str(seed)+".csv", sep=',', index=False)
+        results_df.to_csv(directory + "/no-distance" + "/results_exp_no_similarity_" + str(seed) + ".csv", sep=',', index=False)
 
     # plt.title('Hierarchical Clustering Dendrogram (truncated)')
     # plt.xlabel('sample index or (cluster size)')
