@@ -45,7 +45,7 @@ public class MutantKilledReportFactory implements MutationResultListenerFactory 
 
     @Override
     public String description() {
-        return "Plugin for calculating weighed mutation score.";
+        return "Plugin for extracting results of mutants.";
     }
 
 }

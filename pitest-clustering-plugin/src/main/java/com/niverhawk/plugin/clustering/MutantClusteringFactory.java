@@ -29,7 +29,7 @@ public class MutantClusteringFactory implements MutationInterceptorFactory {
     @Override
     public Feature provides() {
         return Feature.named("CLUSTER")
-                .withDescription("Executes mutants that are provided in list.")
+                .withDescription("Removes mutants that ar not provided in list.")
                 .withOnByDefault(false);
     }
 
