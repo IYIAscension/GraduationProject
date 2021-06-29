@@ -1,6 +1,5 @@
 import datetime
 import math
-import random
 import sys
 from pathlib import Path
 
@@ -104,86 +103,89 @@ def calculate_clustered_score(directory, seed):
             'acc_max': acc_max}
 
 
-def merge_csv_files(directory):
-    df_characteristic = pandas.read_csv(directory + "/clustering/characteristics.csv",
+def merge_csv_files(root_dir):
+    df_characteristic = pandas.read_csv(root_dir + "/clustering/characteristics.csv",
                                         names=["id", "mutOperator", "opcode", "returnType",
                                                "localVarsCount",
                                                "isInTryCatch", "isInFinalBlock", "className", "methodName",
                                                "blockNumber",
                                                "lineNumber"],
                                         skiprows=1)
-    df_levenshtein = pandas.read_csv(directory + "/clustering/distance.csv",
+    df_levenshtein = pandas.read_csv(root_dir + "/clustering/distance.csv",
                                      names=["id", "distance"],
                                      skiprows=1)
-    df_numTests = pandas.read_csv(directory + "/clustering/killed.csv",
+    df_numTests = pandas.read_csv(root_dir + "/clustering/killed.csv",
                                   names=["id", "killed", "numTests"],
                                   skiprows=1)
 
     df = df_characteristic.merge(df_levenshtein, on="id")
     df2 = df.merge(df_numTests, on="id")
-    df2.to_csv(directory + "/clustering/characteristic_complete.csv", sep=',', index=False)
+    df2.to_csv(root_dir + "/clustering/characteristic_complete.csv", sep=',', index=False)
     del df2['killed']
     return df2
+
+
+def do_exp1_full(root_dir, project_name, cur_seed, df):
+    reductions = [0.25, 0.5, 0.75]
+    csv_path = root_dir + "/" + project_name
+    csv_file = Path(csv_path + "/clustering/characteristics.csv")
+    if not csv_file.is_file():
+        print("characteristics not found: " + project_name)
+
+    for reduction in reductions:
+        data = pandas.read_csv(csv_path + "/clustering/characteristic_complete.csv",
+                               names=["id", "mutOperator", "opcode", "returnType",
+                                      "localVarsCount", "isInTryCatch", "isInFinalBlock",
+                                      "className", "methodName", "blockNumber", "lineNumber",
+                                      "distance", "killed", "numTests"],
+                               skiprows=1)
+        del data['killed']
+
+        # define ordinal encoding
+        encoder = LabelEncoder()
+        data = data[["id", "mutOperator", "opcode", "returnType",
+                     "localVarsCount", "isInTryCatch", "isInFinalBlock", "className", "methodName",
+                     "blockNumber", "lineNumber", "distance", "numTests"]]
+        # Transform each column.. do id last since we need to inverse that.
+        for col in ["mutOperator", "returnType", "className", "methodName", "id"]:
+            data[col] = encoder.fit_transform(data[col])
+
+        clustering = AgglomerativeClustering(distance_threshold=None,
+                                             n_clusters=int(math.ceil(len(data) * reduction)),
+                                             linkage="ward",
+                                             compute_distances=True)
+        clustering = clustering.fit(data)
+
+        # unlabel id so we can recognize the mutants
+        data["id"] = encoder.inverse_transform(data["id"])
+        export_clusters(clustering.labels_, data, csv_path)
+
+        results = calculate_clustered_score(csv_path, cur_seed)
+
+        return df.append(
+            {'seed': cur_seed, 'reduction': reduction, 'score': results['score'], 'acc_avg': results['acc_avg'],
+             'acc_min': results['acc_min'], 'acc_max': results['acc_max']},
+            ignore_index=True)
 
 
 if __name__ == "__main__":
     print(datetime.datetime.now())
     directory = sys.argv[1]
     skipped = ['zxing', 'commons-lang', 'jodatime', 'jfreechart', ]
-    projects1 = ['google-auto-service', 'google-auto-common', 'scribejava-core', 'google-auto-factory', 'commons-csv',
+    projects = ['google-auto-service', 'google-auto-common', 'scribejava-core', 'google-auto-factory', 'commons-csv',
                 'commons-cli', 'google-auto-value', 'gson', 'commons-io', 'commons-text', 'commonc-codec', ]
-    projects = ['google-auto-service']
-    reductions = [0.25, 0.5, 0.75]
+    seeds = [
+        66304, 16389, 14706, 91254, 49890, 86054, 55284, 77324, 36147, 13506, 73920, 80157, 43981, 75358, 33399, 56134,
+        13388, 81617, 90957, 52113, 20428, 26482, 56340, 31018, 32067, 13067, 8339, 49008, 14706, 68282, ]
 
-    results_df = pandas.DataFrame(columns=['project', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max'])
-    seed = random.randint(0, 99999)
-    for project in projects:
-        csvPath = directory + "/" + project
-        csvFile = Path(csvPath + "/clustering/characteristics.csv")
+    results_df = pandas.DataFrame(columns=['seed', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max', ])
+    for seed in seeds:
+        results_df = do_exp1_full(directory, 'google-auto-common', seed, results_df)
 
-        if not csvFile.is_file():
-            print("characteristics not found: " + project)
-            continue
-
-        for reduction in reductions:
-
-            data = df_characteristic = pandas.read_csv(csvPath + "/clustering/characteristic_complete.csv",
-                                                       names=["id", "mutOperator", "opcode", "returnType",
-                                                              "localVarsCount", "isInTryCatch", "isInFinalBlock",
-                                                              "className", "methodName", "blockNumber", "lineNumber",
-                                                              "distance", "killed", "numTests"],
-                                                       skiprows=1)
-            del data['killed']
-
-            # define ordinal encoding
-            encoder = LabelEncoder()
-            data = data[["id", "mutOperator", "opcode", "returnType",
-                         "localVarsCount", "isInTryCatch", "isInFinalBlock", "className", "methodName",
-                         "blockNumber", "lineNumber", "distance", "numTests"]]
-            # Transform each column.. do id last since we need to inverse that.
-            for col in ["mutOperator", "returnType", "className", "methodName", "id"]:
-                data[col] = encoder.fit_transform(data[col])
-
-            clustering = AgglomerativeClustering(distance_threshold=None,
-                                                 n_clusters=int(math.ceil(len(data) * reduction)),
-                                                 linkage="ward",
-                                                 compute_distances=True)
-            clustering = clustering.fit(data)
-
-            # unlabel id so we can recognize the mutants
-            data["id"] = encoder.inverse_transform(data["id"])
-            export_clusters(clustering.labels_, data, csvPath)
-
-            results = calculate_clustered_score(csvPath, seed)
-
-            results_df = results_df.append(
-                {'project': project, 'reduction': reduction, 'score': results['score'], 'acc_avg': results['acc_avg'],
-                 'acc_min': results['acc_min'], 'acc_max': results['acc_max']},
-                ignore_index=True)
-            results_df.to_csv(directory + "/full" + "/results_exp_full_" + str(seed) + ".csv", sep=',', index=False)
-
-    results_df.to_csv(directory + "/full" + "/results_exp_full_" + str(seed) + ".csv", sep=',', index=False)
+    results_df.to_csv(directory + "/full" + "/results_exp_full_" + 'google-auto-common' + ".csv", sep=',',
+                      index=False, mode='a')
     print(datetime.datetime.now())
+
 # plt.title('Hierarchical Clustering Dendrogram (truncated)')
 # plt.xlabel('sample index or (cluster size)')
 # plt.ylabel('distance')
