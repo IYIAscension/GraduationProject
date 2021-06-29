@@ -1,7 +1,7 @@
+import datetime
 import math
 import random
 import sys
-import datetime
 from pathlib import Path
 
 import numpy as np
@@ -130,9 +130,9 @@ if __name__ == "__main__":
     print(datetime.datetime.now())
     directory = sys.argv[1]
     skipped = ['zxing', 'commons-lang', 'jodatime', 'jfreechart', ]
-    projects = ['google-auto-service', 'google-auto-common', 'scribejava-core', 'google-auto-factory', 'commons-csv',
+    projects1 = ['google-auto-service', 'google-auto-common', 'scribejava-core', 'google-auto-factory', 'commons-csv',
                 'commons-cli', 'google-auto-value', 'gson', 'commons-io', 'commons-text', 'commonc-codec', ]
-    projects1 = ['google-auto-common']
+    projects = ['google-auto-service']
     reductions = [0.25, 0.5, 0.75]
 
     results_df = pandas.DataFrame(columns=['project', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max'])
@@ -147,7 +147,13 @@ if __name__ == "__main__":
 
         for reduction in reductions:
 
-            data = merge_csv_files(csvPath)
+            data = df_characteristic = pandas.read_csv(csvPath + "/clustering/characteristic_complete.csv",
+                                                       names=["id", "mutOperator", "opcode", "returnType",
+                                                              "localVarsCount", "isInTryCatch", "isInFinalBlock",
+                                                              "className", "methodName", "blockNumber", "lineNumber",
+                                                              "distance", "killed", "numTests"],
+                                                       skiprows=1)
+            del data['killed']
 
             # define ordinal encoding
             encoder = LabelEncoder()

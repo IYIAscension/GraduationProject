@@ -147,7 +147,14 @@ if __name__ == "__main__":
 
         for reduction in reductions:
 
-            data = merge_csv_files(csvPath)
+            data = df_characteristic = pandas.read_csv(csvPath + "/clustering/characteristic_complete.csv",
+                                                       names=["id", "mutOperator", "opcode", "returnType",
+                                                              "localVarsCount", "isInTryCatch", "isInFinalBlock",
+                                                              "className", "methodName", "blockNumber", "lineNumber",
+                                                              "distance", "killed", "numTests"],
+                                                       skiprows=1)
+            del data['distance']
+            del data['killed']
 
             # define ordinal encoding
             encoder = LabelEncoder()
