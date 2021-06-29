@@ -125,7 +125,7 @@ def merge_csv_files(root_dir):
     return df2
 
 
-def do_exp1_full(root_dir, project_name, cur_seed, df):
+def do_exp1_full(root_dir, project_name, cur_seed, df, include_distance):
     reductions = [0.25, 0.5, 0.75]
     csv_path = root_dir + "/" + project_name
     csv_file = Path(csv_path + "/clustering/characteristics.csv")
@@ -139,7 +139,10 @@ def do_exp1_full(root_dir, project_name, cur_seed, df):
                                       "className", "methodName", "blockNumber", "lineNumber",
                                       "distance", "killed", "numTests"],
                                skiprows=1)
+
         del data['killed']
+        if not include_distance:
+            del data['distance']
 
         # define ordinal encoding
         encoder = LabelEncoder()
@@ -169,7 +172,7 @@ def do_exp1_full(root_dir, project_name, cur_seed, df):
 
 
 if __name__ == "__main__":
-    print(datetime.datetime.now())
+
     directory = sys.argv[1]
     skipped = ['zxing', 'commons-lang', 'jodatime', 'jfreechart', ]
     projects = ['google-auto-service', 'google-auto-common', 'scribejava-core', 'google-auto-factory', 'commons-csv',
@@ -177,13 +180,24 @@ if __name__ == "__main__":
     seeds = [
         66304, 16389, 14706, 91254, 49890, 86054, 55284, 77324, 36147, 13506, 73920, 80157, 43981, 75358, 33399, 56134,
         13388, 81617, 90957, 52113, 20428, 26482, 56340, 31018, 32067, 13067, 8339, 49008, 14706, 68282, ]
+    print(datetime.datetime.now())
+    for project in projects:
+        results_df = pandas.DataFrame(columns=['seed', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max', ])
+        for seed in seeds:
+            results_df = do_exp1_full(directory, project, seed, results_df, False)
 
-    results_df = pandas.DataFrame(columns=['seed', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max', ])
-    for seed in seeds:
-        results_df = do_exp1_full(directory, 'google-auto-common', seed, results_df)
+        results_df.to_csv(directory + "/full" + "/results_exp_full_" + project + ".csv", sep=',',
+                          index=False, )
+    print(datetime.datetime.now())
 
-    results_df.to_csv(directory + "/full" + "/results_exp_full_" + 'google-auto-common' + ".csv", sep=',',
-                      index=False, mode='a')
+    print(datetime.datetime.now())
+    for project in projects:
+        results_df = pandas.DataFrame(columns=['seed', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max', ])
+        for seed in seeds:
+            results_df = do_exp1_full(directory, project, seed, results_df, True)
+
+        results_df.to_csv(directory + "/full" + "/results_exp_no_distance_" + project + ".csv", sep=',',
+                          index=False, )
     print(datetime.datetime.now())
 
 # plt.title('Hierarchical Clustering Dendrogram (truncated)')
