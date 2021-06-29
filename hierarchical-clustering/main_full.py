@@ -127,7 +127,7 @@ def merge_csv_files(directory):
 
 
 if __name__ == "__main__":
-
+    print(datetime.datetime.now())
     directory = sys.argv[1]
     skipped = ['zxing', 'commons-lang', 'jodatime', 'jfreechart', ]
     projects1 = ['google-auto-service', 'google-auto-common', 'scribejava-core', 'google-auto-factory', 'commons-csv',
@@ -135,57 +135,55 @@ if __name__ == "__main__":
     projects = ['google-auto-service']
     reductions = [0.25, 0.5, 0.75]
 
-    for count in range(31):
-        print(datetime.datetime.now())
-        results_df = pandas.DataFrame(columns=['project', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max'])
-        seed = random.randint(0, 99999)
-        for project in projects:
-            csvPath = directory + "/" + project
-            csvFile = Path(csvPath + "/clustering/characteristics.csv")
+    results_df = pandas.DataFrame(columns=['project', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max'])
+    seed = random.randint(0, 99999)
+    for project in projects:
+        csvPath = directory + "/" + project
+        csvFile = Path(csvPath + "/clustering/characteristics.csv")
 
-            if not csvFile.is_file():
-                print("characteristics not found: " + project)
-                continue
+        if not csvFile.is_file():
+            print("characteristics not found: " + project)
+            continue
 
-            for reduction in reductions:
+        for reduction in reductions:
 
-                data = df_characteristic = pandas.read_csv(csvPath + "/clustering/characteristic_complete.csv",
-                                                           names=["id", "mutOperator", "opcode", "returnType",
-                                                                  "localVarsCount", "isInTryCatch", "isInFinalBlock",
-                                                                  "className", "methodName", "blockNumber", "lineNumber",
-                                                                  "distance", "killed", "numTests"],
-                                                           skiprows=1)
-                del data['killed']
+            data = df_characteristic = pandas.read_csv(csvPath + "/clustering/characteristic_complete.csv",
+                                                       names=["id", "mutOperator", "opcode", "returnType",
+                                                              "localVarsCount", "isInTryCatch", "isInFinalBlock",
+                                                              "className", "methodName", "blockNumber", "lineNumber",
+                                                              "distance", "killed", "numTests"],
+                                                       skiprows=1)
+            del data['killed']
 
-                # define ordinal encoding
-                encoder = LabelEncoder()
-                data = data[["id", "mutOperator", "opcode", "returnType",
-                             "localVarsCount", "isInTryCatch", "isInFinalBlock", "className", "methodName",
-                             "blockNumber", "lineNumber", "distance", "numTests"]]
-                # Transform each column.. do id last since we need to inverse that.
-                for col in ["mutOperator", "returnType", "className", "methodName", "id"]:
-                    data[col] = encoder.fit_transform(data[col])
+            # define ordinal encoding
+            encoder = LabelEncoder()
+            data = data[["id", "mutOperator", "opcode", "returnType",
+                         "localVarsCount", "isInTryCatch", "isInFinalBlock", "className", "methodName",
+                         "blockNumber", "lineNumber", "distance", "numTests"]]
+            # Transform each column.. do id last since we need to inverse that.
+            for col in ["mutOperator", "returnType", "className", "methodName", "id"]:
+                data[col] = encoder.fit_transform(data[col])
 
-                clustering = AgglomerativeClustering(distance_threshold=None,
-                                                     n_clusters=int(math.ceil(len(data) * reduction)),
-                                                     linkage="ward",
-                                                     compute_distances=True)
-                clustering = clustering.fit(data)
+            clustering = AgglomerativeClustering(distance_threshold=None,
+                                                 n_clusters=int(math.ceil(len(data) * reduction)),
+                                                 linkage="ward",
+                                                 compute_distances=True)
+            clustering = clustering.fit(data)
 
-                # unlabel id so we can recognize the mutants
-                data["id"] = encoder.inverse_transform(data["id"])
-                export_clusters(clustering.labels_, data, csvPath)
+            # unlabel id so we can recognize the mutants
+            data["id"] = encoder.inverse_transform(data["id"])
+            export_clusters(clustering.labels_, data, csvPath)
 
-                results = calculate_clustered_score(csvPath, seed)
+            results = calculate_clustered_score(csvPath, seed)
 
-                results_df = results_df.append(
-                    {'project': project, 'reduction': reduction, 'score': results['score'], 'acc_avg': results['acc_avg'],
-                     'acc_min': results['acc_min'], 'acc_max': results['acc_max']},
-                    ignore_index=True)
-                results_df.to_csv(directory + "/full" + "/results_exp_full_" + str(seed) + ".csv", sep=',', index=False)
+            results_df = results_df.append(
+                {'project': project, 'reduction': reduction, 'score': results['score'], 'acc_avg': results['acc_avg'],
+                 'acc_min': results['acc_min'], 'acc_max': results['acc_max']},
+                ignore_index=True)
+            results_df.to_csv(directory + "/full" + "/results_exp_full_" + str(seed) + ".csv", sep=',', index=False)
 
-        results_df.to_csv(directory + "/full" + "/results_exp_full_" + str(seed) + ".csv", sep=',', index=False)
-        print(datetime.datetime.now())
+    results_df.to_csv(directory + "/full" + "/results_exp_full_" + str(seed) + ".csv", sep=',', index=False)
+    print(datetime.datetime.now())
 # plt.title('Hierarchical Clustering Dendrogram (truncated)')
 # plt.xlabel('sample index or (cluster size)')
 # plt.ylabel('distance')
