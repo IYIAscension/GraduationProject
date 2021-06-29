@@ -1,3 +1,4 @@
+import datetime
 import math
 import random
 import sys
@@ -127,6 +128,7 @@ def merge_csv_files(directory):
 
 
 if __name__ == "__main__":
+    print(datetime.datetime.now())
     directory = sys.argv[1]
     skipped = ['zxing', 'commons-lang', 'jodatime', 'jfreechart', ]
     projects = ['google-auto-service', 'google-auto-common', 'scribejava-core', 'google-auto-factory', 'commons-csv',
@@ -178,6 +180,7 @@ if __name__ == "__main__":
 
     results_df.to_csv(directory + "/no-distance" + "/results_exp_no_similarity_" + str(seed) + ".csv", sep=',',
                       index=False)
+    print(datetime.datetime.now())
 
 # plt.title('Hierarchical Clustering Dendrogram (truncated)')
 # plt.xlabel('sample index or (cluster size)')
