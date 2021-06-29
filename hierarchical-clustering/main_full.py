@@ -141,14 +141,18 @@ def do_exp1_full(root_dir, project_name, cur_seed, df, include_distance):
                                skiprows=1)
 
         del data['killed']
-        if not include_distance:
-            del data['distance']
+
 
         # define ordinal encoding
         encoder = LabelEncoder()
         data = data[["id", "mutOperator", "opcode", "returnType",
                      "localVarsCount", "isInTryCatch", "isInFinalBlock", "className", "methodName",
                      "blockNumber", "lineNumber", "distance", "numTests"]]
+        if not include_distance:
+            del data['distance']
+            data = data[["id", "mutOperator", "opcode", "returnType",
+                         "localVarsCount", "isInTryCatch", "isInFinalBlock", "className", "methodName",
+                         "blockNumber", "lineNumber", "numTests"]]
         # Transform each column.. do id last since we need to inverse that.
         for col in ["mutOperator", "returnType", "className", "methodName", "id"]:
             data[col] = encoder.fit_transform(data[col])
