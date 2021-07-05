@@ -65,6 +65,7 @@ if __name__ == '__main__':
 
     results_df = pandas.DataFrame(columns=['project', 'seed', 'clusters', 'score', 'acc_avg', 'acc_min', 'acc_max'])
     for row in projects.itertuples():
+        print(row.project, seed)
         csv_path = directory + "/" + row.project
 
         data = pandas.read_csv(csv_path + "/clustering/characteristic_complete.csv",
