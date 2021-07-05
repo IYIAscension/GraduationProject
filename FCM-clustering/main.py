@@ -14,6 +14,7 @@ def export_clusters(labels, csv_data, export_dir):
     df.to_csv(export_dir + "/clustering/clusters.csv", sep=',', index=False)
     return df
 
+
 def calculate_clustered_score(directory, seed):
     killed = pandas.read_csv(directory + "/clustering/killed.csv",
                              names=["id", "killed", " numTests"],
@@ -54,10 +55,11 @@ def calculate_clustered_score(directory, seed):
 
 if __name__ == '__main__':
     directory = sys.argv[1]
+    seed = int(sys.argv[2])
     projects = pandas.read_csv(directory + "/exp2_cluster_size/cluster_sizes.csv",
                                names=["project", "clusters"],
                                skiprows=1)
-    seeds = [
+    dont_use_this = [
         66304, 16389, 14706, 91254, 49890, 86054, 55284, 77324, 36147, 13506, 73920, 80157, 43981, 75358, 33399, 56134,
         13388, 81617, 90957, 52113, 20428, 26482, 56340, 31018, 32067, 13067, 8339, 49008, 14706, 68282, ]
 
@@ -67,32 +69,32 @@ if __name__ == '__main__':
 
         data = pandas.read_csv(csv_path + "/clustering/characteristic_complete.csv",
                                names=["id", "mutOperator", "opcode", "returnType", "localVarsCount", "isInTryCatch",
-                                      "isInFinalBlock", "className", "methodName", "blockNumber", "lineNumber", "distance",
+                                      "isInFinalBlock", "className", "methodName", "blockNumber", "lineNumber",
+                                      "distance",
                                       "killed", "numTests", ],
                                skiprows=1)
-        del data['distance']
         del data['killed']
         encoder = LabelEncoder()
         for col in ["mutOperator", "returnType", "className", "methodName", "id"]:
             data[col] = encoder.fit_transform(data[col])
-        for seed in seeds:
-            X_train, X_test = train_test_split(data, test_size=0.20, random_state=seed)
 
-            X = data.values
-            fcm = FCM(n_clusters=row.clusters, max_iter=15, random_state=seed, m=2.5)
-            fcm.fit(X_train)
-            fcm_centers = fcm.centers
+        X_train, X_test = train_test_split(data, test_size=0.20, random_state=seed)
 
-            fcm_labels = fcm.predict(X_test)
+        X = data.values
+        fcm = FCM(n_clusters=row.clusters, max_iter=15, random_state=seed, m=2.5)
+        fcm.fit(X_train)
+        fcm_centers = fcm.centers
 
-            data["id"] = encoder.inverse_transform(data["id"])
+        fcm_labels = fcm.predict(X_test)
 
-            export_clusters(fcm_labels, data, csv_path)
-            results = calculate_clustered_score(csv_path, seed)
-            results_df = results_df.append(
-                {'project': row.project, 'seed': seed, 'clusters': row.clusters, 'score': results['score'],
-                 'acc_avg': results['acc_avg'],
-                 'acc_min': results['acc_min'], 'acc_max': results['acc_max']},
-                ignore_index=True)
-    results_df.to_csv(directory+"/fcm/"+row.project+".csv", sep=',',
-                      index=False, )
+        data["id"] = encoder.inverse_transform(data["id"])
+
+        export_clusters(fcm_labels, data, csv_path)
+        results = calculate_clustered_score(csv_path, seed)
+        results_df = results_df.append(
+            {'project': row.project, 'seed': seed, 'clusters': row.clusters, 'score': results['score'],
+             'acc_avg': results['acc_avg'],
+             'acc_min': results['acc_min'], 'acc_max': results['acc_max']},
+            ignore_index=True)
+        results_df.to_csv(directory + "/fcm/" + str(seed) + ".csv", sep=',',
+                          index=False, )
