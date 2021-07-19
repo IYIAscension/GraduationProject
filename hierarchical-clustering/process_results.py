@@ -12,22 +12,39 @@ if __name__ == "__main__":
     skipped = ['zxing', 'commons-lang', 'jodatime', 'jfreechart', ]
     projects = ['google-auto-service', 'google-auto-common', 'scribejava-core', 'google-auto-factory', 'commons-csv',
                 'commons-cli', 'google-auto-value', 'gson', 'commons-io', 'commons-text', 'commonc-codec', ]
+    reductions = [0.25, 0.5, 0.75]
     results_df = pandas.DataFrame(columns=['project', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max', ])
-    cvs_path = directory + "/full"
+    avg_df = pandas.DataFrame(columns=['project', 'reduction', 'score'])
     for project in projects:
-        data = pandas.read_csv(cvs_path + "/full" + "/results_exp_full_" + project + ".csv",
-                               names=['seed', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max', ],
+        data = pandas.read_csv(directory + "/no_distance/results_exp_no_distance_" + project + ".csv",
+                               names=['seed','reduction','score','acc_avg','acc_min','acc_max'],
                                skiprows=1)
-
-# plt.title('Hierarchical Clustering Dendrogram (truncated)')
-# plt.xlabel('sample index or (cluster size)')
-# plt.ylabel('distance')
-# dendrogram(
-#     calc_linkage_matrix(clustering),
-#     truncate_mode='lastp',  # show only the last p merged clusters
-#     p=12,  # show only the last p merged clusters
-#     leaf_rotation=90.,
-#     leaf_font_size=12.,
-#     show_contracted=True,  # to get a distribution impression in truncated branches
-# )
-# plt.show()
+    data = pandas.read_csv(directory + "/no_distance/results_exp_no_distance_" + "project" + ".csv",
+                           names=['seed', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max'],
+                           skiprows=1)
+    # for reduction in reductions:
+    curData = data[data['reduction'] == 0.50]
+    for index, row in curData.iterrows():
+        print("{},{}".format(row.seed, row.score))
+        # avg_df = avg_df.append(
+        #     {'project': project, 'reduction': reduction, 'score': score_diff},
+    #         ignore_index=True)
+    # avg_df = avg_df.sort_values('reduction')
+    # avg_df.to_csv(directory + "/no_distance" + "/results_no_distance_seed_diff.csv", sep=',',
+    #                       index=False, )
+    # for reduction in reductions:
+    #
+    #     cvs_path = directory + "/no_distance"
+    #     for project in projects:
+    #         data = pandas.read_csv(cvs_path + "/results_exp_no_distance_" + project + ".csv",
+    #                                names=['seed', 'reduction', 'score', 'acc_avg', 'acc_min', 'acc_max', ],
+    #                                skiprows=1)
+    #         sorted = data[data['reduction'] == reduction]
+    #         results_df = results_df.append(
+    #             {'project': project, 'reduction': reduction, 'score': sorted['score'].mean(),
+    #              'acc_avg': sorted['acc_avg'].mean(), 'acc_min': sorted['acc_min'].mean(),
+    #              'acc_max': sorted['acc_max'].mean()},
+    #             ignore_index=True)
+    # results_df = results_df.sort_values('project')
+    # results_df.to_csv(directory + "/no_distance" + "/results_no_distance_avg.csv", sep=',',
+    #                       index=False, )

@@ -180,7 +180,7 @@ if __name__ == "__main__":
     directory = sys.argv[1]
     skipped = ['zxing', 'commons-lang', 'jodatime', 'jfreechart', ]
     projects = ['google-auto-service', 'google-auto-common', 'scribejava-core', 'google-auto-factory', 'commons-csv',
-                 'commons-cli', 'google-auto-value', 'gson', 'commons-io' ]
+                 'commons-cli', 'google-auto-value', 'gson', 'commons-io','commons-text', 'commonc-codec', ]
     projects1 = ['commons-text', 'commonc-codec', ]
     seeds = [
         66304, 16389, 14706, 91254, 49890, 86054, 55284, 77324, 36147, 13506, 73920, 80157, 43981, 75358, 33399, 56134,
