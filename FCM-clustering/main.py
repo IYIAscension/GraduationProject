@@ -82,7 +82,7 @@ if __name__ == '__main__':
         X_train, X_test = train_test_split(data, test_size=0.20, random_state=seed)
 
         X = data.values
-        fcm = FCM(n_clusters=1304, max_iter=15, random_state=seed, m=2.5)
+        fcm = FCM(n_clusters=row.clusters, max_iter=15, random_state=seed, m=2.5)
         fcm.fit(X_train)
         fcm_centers = fcm.centers
 
