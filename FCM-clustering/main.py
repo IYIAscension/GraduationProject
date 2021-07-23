@@ -61,7 +61,7 @@ if __name__ == '__main__':
                                skiprows=1)
     dont_use_this = [
         66304, 16389, 14706, 91254, 49890, 86054, 55284, 77324, 36147, 13506, 73920, 80157, 43981, 75358, 33399, 56134,
-        13388, 81617, 90957, 52113, 20428, 26482, 56340, 31018, 32067, 13067, 8339, 49008, 14706, 68282, ]
+        13388, 81617, 90957, 52113, 20428, 26482, 56340, 31018, 32067, 13067, 8339, 49008, 125894, 68282, ]
 
     results_df = pandas.DataFrame(columns=['project', 'seed', 'clusters', 'score', 'acc_avg', 'acc_min', 'acc_max'])
     for row in projects.itertuples():
@@ -97,5 +97,5 @@ if __name__ == '__main__':
              'acc_avg': results['acc_avg'],
              'acc_min': results['acc_min'], 'acc_max': results['acc_max']},
             ignore_index=True)
-        results_df.to_csv(directory + "/fcm/" + str(seed) + ".csv", sep=',',
+        results_df.to_csv(directory + "/fcm_no_distance/" + str(seed) + ".csv", sep=',',
                           index=False, )
