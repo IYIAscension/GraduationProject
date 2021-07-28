@@ -1,0 +1,169 @@
+\documentclass[../../main]{subfiles}
+\begin{document}
+\section{Identifying characteristics}
+\label{ch:identifying_characteristics}
+Our goal is to cluster any mutant that fit the requirements of the selected mutation testing tools.
+We want to solve the scoping problem in existing research\cite{Ji2009,Wilinski2015,Ma2016,Wei2021SpectralTesting}.
+To achieve this we need to identify characteristics that every mutant contains. 
+As part of our white box methodology we perform a qualitative analysis on mutants and identify characteristics that are relevant for defining the means of domains as the centre of clusters. 
+
+\subsection{Overview of characteristics}
+Zhang et al., identifies several mutant characteristics\cite{Zhang2019PredictiveTesting}. 
+The goal of their research is detecting as accurate as possible whether a mutant survives or not before executing the mutant.
+The mutant characteristics identified by Zhang et al., have been used in other research with promising results\cite{Oonk2021}.
+While the goal of their research is different than ours, we can still use the characteristics they identified.
+We select characteristics relevant to our research from the research of Zhang et al., and Oonk\cite{Oonk2021}.
+We extend the list of characteristics with data we can extract from the selected mutation testing tool. 
+\newline
+PIT generates and executes mutants on byte code level\cite{pitestBytecode}.
+By mutating in Java byte code we can identify characteristics specific to Java byte code.
+PIT also gathers mutant metadata.
+We can extract this mutant metadata and identify characteristics. 
+With the combination of information extracted from PIT and characteristics selected from existing research we identify the following characteristics:
+\begin{enumerate}
+    \item Mutant similarity.
+    \item Amount of tests the mutant is challenged by.
+    \item Mutator identifier.
+    \item Mutant opcode.
+    \item Mutant return type.
+    \item Mutant contains local variables.
+    \item Mutant is in try catch block.
+    \item Mutant is in finally block.
+    \item Name of class that contains the mutant.
+    \item Name of function that contains the mutant.
+    \item Line number of the start of the block that contains the mutant.
+    \item Line number on which the mutation occur.
+\end{enumerate}
+In the following sections we elaborate on these characteristics.
+
+\subsection{Mutant similarity}
+A piece of code is a textual representation of instructions for a computer.
+A mutant is a transformation of a piece of code.
+This transformation is predefined.
+The difference between a mutant and its parent can be defined as similarity.
+We identify the similarity between a mutant and parent as a characteristic.
+\newline
+To measure this characteristic we select a similarity measure.
+There are existing similarities measures that base their similarity in different ways\cite{Gomma2013AApproaches}. 
+\newline
+The Levenshtein distance defines the distance between two strings by counting the minimum number of operations(create/edit/delete) needed to transform one string into the other\cite{Gomma2013AApproaches}.
+The more the textual representation of a mutant differs from its parent the bigger the Levenshtein distance will be.
+A unit test tests a small piece of code.
+The more this piece of code differs from its original the more likely it is the test will fail.
+The Levenshtein distance measures this difference.
+We select the Levenshtein distance as similarity measure for our research\cite{Gomma2013AApproaches}.
+This could be a useful characteristic because mutants that have the same similarity may be grouped together.
+
+\subsection{Amount of tests challenged by mutant}
+A mutant may be challenged by tests.
+If the test fails, the mutant is considered killed.
+If the test passes, the mutant is considered survived.
+If the mutant is not challenged by any tests it is also considered survived.
+The amount of tests a mutant is challenged by is dependant on the coverage and test effectiveness of the test suite.
+We identify this number as a characteristic.
+Every test the mutant is challenged by is an occasion for the mutant to be killed or not.
+This could be a useful characteristic because mutants that have more chances to be killed may be grouped together.
+
+\subsection{Mutator identifier}
+At the time of writing the selected mutation testing tool PIT supports more than 100 mutators\cite{pitestMutators}.
+A mutator is the definition of how the code is mutated from its original\cite{Offutt2001}.
+Each mutator mutates the source code in a dfferent way.
+PIT assigns identifiers to their mutators for execution and reporting purposes. 
+Each mutant has a mutator identifier that matches with how the mutant is mutated from the source code.
+We can extract this data from PIT and use it as a characteristic.
+It could be a useful characteristic because mutants that are changed in the same predefined way may be grouped together.
+
+\subsection{Mutant opcode}
+\say{A Java Virtual Machine instruction consists of a one-byte opcode specifying the operation to be performed, followed by zero or more operands supplying arguments or data that are used by the operation.} (Java 12 SE docs ch.12).
+When PIT mutates the source code it uses Java opcodes to alter the original byte code. 
+A record of which opcode is being used is stored in memory during the mutation testing process. 
+This opcode can differ per mutator and is dependant on how the code is written.
+During the mutation testing process of PIT we can extract the opcode.
+We identify the opcode as a characteristic.
+The opcode is a characteristic that influences the end result of the mutant in byte code representation which in turn can influence other characteristics, for example the Levenshtein distance.
+The opcode could be a useful characteristic because mutants with the same opcode may be grouped together.
+
+\subsection{Mutant return type}
+A mutant may contain a return statement. 
+This is dependant on the source code that is mutated.
+A return statement can be identified as a characteristic.
+If a mutant contains a return statement, we can extract its type from PIT.
+There is the possibility that a mutant does not contain a return statement, in this case we set the mutant return type to a default value.
+The return type is a distinctive property of a piece of code, this distinction a useful characteristic because mutants with the same return type may be grouped together.
+
+
+\subsection{Mutant location}\label{ch:characteristics_location}
+The location of a mutant in PIT is defined by multiple properties;
+the name of the class, the name of the function, the line number of the start of the block the mutant is located in and the line number the mutation occurs on.
+These properties refer to the location in Java byte code.
+The location can be identified as a characteristic of a mutant.
+PIT uses this location during the mutation testing process and for reporting purposes.
+We can extract the location as defined by the properties in PIT.
+Each property is identified as a characteristic.
+The location of a piece of code is a distinctive property. 
+The same piece of code in a different location may have a different effect on the source code or unit tests.
+For example two mutants with the same byte code may have a different result in two different locations of a software project. 
+This is dependent on different factors one of which being the unit tests the mutant is challenged by.
+A mutant may not be unique if the location is not taken into account.
+It could be a useful characteristic because mutants that are in the same location may be grouped together.
+
+\subsection{Error handling capability}
+A technique to handle errors in Java is to use try-catch blocks\cite{javaDocs}. 
+The presence of try-catch blocks are an indication of the error handling capabilities of certain pieces of code.
+An addition to the try-catch blocks are finally blocks.
+A finally block is executed after a try and catch block\cite{javaDocs}.
+There is a possibility that a mutant may be generated inside these blocks.
+If a mutant is located in a try, catch or finally block can be defined as a characteristic.
+It could be a useful characteristic because the mutants that are located in the same type of block may be grouped together.
+
+\subsection{Local variables}
+A mutant may be located in a location(see Chapter \ref{ch:characteristics_location}) that may contain local variables.
+There is a chance a mutant modifies a local variable.
+A variable modified by a mutant may increase the chance for a mutant to be killed.
+This is because a unit test may check for a specific value for a specific local variable.
+The amount of local variables a location contains can be identified as a characteristic.
+We can extract the amount of local variables a location contains from PIT.
+This could be a useful characteristic as mutants with the same amount of local variables may be grouped together.
+It could also be possible that there is a relation between the amount of local variables and the result of a mutant(killed or survived).
+
+\subsection{Extracting characteristics}
+To extract all the characteristics we identified we need to run PIT and configure it to generate all mutants that are possible within the tool. 
+PIT works in phases, the first phase is the generation phase where mutants are generated.
+The second phase is the execution phase where mutants are challenged by the test suite.
+The last phase is the reporting phase where a report is generated based on the users preferences and data generated by PIT.
+During the various stages we can extract characteristics by using PIT's plugin system.
+The plugins are executed after each other and per class.
+In other words first plugin A will make changes or analyse all classes then plugin B etc.
+\newline
+PIT offers a plugin system in which developers can inject their own code in PIT\cite{pitestPlugin}.
+There are two main types of plugins; a Mutation Result Listener and a Mutation interceptor\cite{pitestPlugin}.
+A mutation result listener receives the details of analysed mutations as they arrive\cite{pitestPlugin}.
+A Mutation interceptor is passed a complete list of all mutation that will be generated to each class before the mutation are challenged by tests\cite{pitestPlugin}.
+The implementation of our experiment makes use of this plugins system.
+\newline
+We developed two plugins to extract characteristics.
+The first plugin is of type Mutation interceptor.
+It is provided a list of details per class. 
+We can extract all characteristics but the Levensthein distance and the amount of tests a mutant is challenged by.
+To calculate the Levensthein distance we need the byte code of the original code and the mutated code.
+We generate the byte code of the original code based on the location provided in the list of details.
+We make use of existing functionality in PIT for generating byte code.
+The mutator is also provided in the list of details.
+With the combination of location and mutator we can generate the byte code of the mutant.
+With both the mutated byte code and original byte code available we can calculate the Levenshtein distance.
+\newline
+The characteristics gathered until this phase of the mutation testing process are written, together with a unique identifier, to a \acrshort{csv} file.
+\newline
+The second plugin is a mutation result listener. 
+This plugin gets passed a list of the results per mutant.
+This list contains data about the mutant survival status.
+It also contains data about the number of tests the mutant is challenged by.
+We store this data together with the identifier to a different \acrshort{csv} file.
+\newline
+When the mutation testing process has finished we need to merge the characteristic gathered in from the plugins.
+We add the characteristic; the number of tests the mutant is challenged by to the data file containing all the other characteristics.
+All the files contain the same unique identifier per mutant on which we can merge the data.
+We do not add the information about the survival of a mutant.
+We only need this data to validate our results. 
+
+\end{document}

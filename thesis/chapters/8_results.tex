@@ -1,0 +1,19 @@
+\documentclass[../main]{subfiles}
+\begin{document}
+\chapter{Results}
+\label{ch:results}
+In this chapter we present the results of our experiments.
+We divide the results in two sections. 
+The first section displays the results of clustering with hierarchical clustering.
+The second section displays the results of clustering with the \acrshort{fcm} model.
+\newline
+During the process of extracting the characteristics we found that calculating the Levenshtein distance took a long time.
+Calculating the Levenshtein distance for the four biggest projects in the data set cost days.
+Even for the smaller projects the extraction of the characteristics cost hours.
+Including the Levenshtein distance defeats the purpose of increasing performance as every bit of performance we increase would be replaced by the cost of calculating the Levenshtein distance.
+To see if it is possible to mitigate this risk we repeat the experiment without the Levensthein distance characteristic.
+
+
+\subfile{results/1_results_rq1}
+\subfile{results/2_results_rq2}
+\end{document}

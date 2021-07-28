@@ -1,0 +1,160 @@
+\NeedsTeXFormat{LaTeX2e}                                                     
+\ProvidesPackage{uvaTemplate}[2021/03/25 uvaTemplate]
+% these commands where taken from the master thesis template main.tex and moved here partially modified for a clearer main.text by Dries Meerman
+
+\newcommand{\@authoremail}[1]{}
+\newcommand{\@academicsupervisor}[1]{}
+\newcommand{\@academicsupervisormail}[1]{}
+\newcommand{\@dailysupervisor}[1]{}
+\newcommand{\@dailysupervisoremail}[1]{}
+\newcommand{\@hostorg}[1]{}
+\newcommand{\@hostorgurl}[1]{}
+\newcommand{\@titleDate}[1]{\today}
+
+\newcommand{\authoremail}[1]{\renewcommand{\@authoremail}{#1}}
+\newcommand{\academicsupervisor}[1]{\renewcommand{\@academicsupervisor}{#1}}
+\newcommand{\academicsupervisoremail}[1]{\renewcommand{\@academicsupervisormail}{#1}}
+\newcommand{\dailysupervisor}[1]{\renewcommand{\@dailysupervisor}{#1}}
+\newcommand{\dailysupervisoremail}[1]{\renewcommand{\@dailysupervisoremail}{#1}}
+\newcommand{\hostorg}[1]{\renewcommand{\@hostorg}{#1}}
+\newcommand{\hostorgurl}[1]{\renewcommand{\@hostorgurl}{#1}}
+\newcommand{\titleDate}[1]{\renewcommand{\@titleDate}{#1}}
+
+
+
+\newcommand{\ie}{\emph{i.e.},\xspace}
+\newcommand{\eg}{\emph{e.g.},\xspace}
+\newcommand{\etc}{\emph{etc.}\xspace}
+\newcommand{\etal}{\emph{et al.}\xspace}
+
+\newcommand{\sig}{\gls{sig}}
+\newcommand{\sigs}{\glspl{sig}}
+
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1, inline]{#2}}
+\newcommandx{\discussion}[2][1=]{\todo[linecolor=red,backgroundcolor=green!25,bordercolor=red,inline,#1]{#2}}
+
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+
+\newcommandx{\reminder}[2][1=]{\todo[linecolor=yellow,backgroundcolor=yellow!25,bordercolor=yellow,#1]{#2}}
+
+\newcommandx{\lessprio}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\todocontent}[2][1=]{\todo[author=\textbf{Planned content},backgroundcolor=Goldenrod!25,bordercolor=Goldenrod,inline,#1]{#2}}
+
+
+%%Some additional table column specifiers, allowing for fixed width columns that wrap.
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+
+\definecolor{ryel}{HTML}{fcd116}
+\definecolor{rred}{HTML}{ce1126}
+\definecolor{rblu}{HTML}{0a3eb9}
+%these are examples of commands that may facilitate feedback annotations in the document
+%replace \paco by your name and \ana by your supervisor's name
+%\newcommandx{\ana}[2][1=]{\todo[linecolor=rblu,backgroundcolor=ryel,bordercolor=rred,#1]{#2}}
+%\newcommandx{\paco}[2][1=]{\todo[author=Paco,linecolor=blue,backgroundcolor=white,bordercolor=red,#1]{#2}}
+
+
+% -- title page is a modified version of https://github.com/software-engineering-amsterdam/latex/blob/master/thesis/uvamscse.cls
+\newcommand{\email}[1]{\ttfamily\href{mailto:#1}{#1}}
+
+\newcommand{\uvacoverfoot}{%
+	\vfill
+	\begin{center}
+		\begin{tabular}{r|l}
+			\multirow{3}{*}{\includegraphics[height=48pt]{uva.pdf}}
+			&\textsc{\Large Universiteit van Amsterdam}\\
+			&\textsc{Faculteit der Natuurwetenschappen, Wiskunde en Informatica}\\
+			&\textsc{Master Software Engineering}\\
+			&\url{http://www.software-engineering-amsterdam.nl}
+		\end{tabular}
+	\end{center}
+}
+
+\renewcommand{\maketitle}{%
+	% The cover page
+	% --------------
+	\thispagestyle{empty}
+	\enlargethispage{30pt}
+	\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+	% Will be page 0, s.t. contents start on page 1
+	\setcounter{page}{0}
+	% \eccoverhead
+	% Volume and article title, author(s)
+	\vspace{60pt}
+	\begin{center}
+		{\Huge\bfseries \@title \par}
+		
+		\vspace{44pt}
+		{\Large\bfseries \@author \par}
+		\email{ \@authoremail }\\
+		\vspace{11pt}
+		\@titleDate, \pageref{LastPage} pages
+	\end{center}
+	\vfill
+	\begin{tabular}{ll}
+		\textbf{Academic supervisor:} 	& \@academicsupervisor, \email{\@academicsupervisormail} \\
+		\textbf{Daily supervisor:} & \@dailysupervisor, \email{\@dailysupervisoremail}\\
+		\textbf{Host organisation:} & \@hostorg, \url{\@hostorgurl}
+	\end{tabular}
+	\uvacoverfoot
+	\newpage
+	\setcounter{footnote}{0}
+	\renewcommand{\thefootnote}{\arabic{footnote}}
+	\setlength{\parskip}{0pt}
+}
+
+%\newcommand{\uvaabstract}{}latex 
+%\renewcommand{\abstract}[2][Abstract]{\renewcommand{\uvaabstract}{\chapter*{Abstract}%
+%\par#2\newpage}}
+
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}
+  \rfoot{\small \textsc {Page \thepage\ of \pageref{LastPage}}}
+  \renewcommand{\footrulewidth}{0.5pt}
+}
+
+%-------- End of ``title page''
+
+%Fancy page headers
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\leftmark}
+\lhead{\includegraphics[width=5cm]{logoUvA.pdf}}
+% \fancyfoot[C]{\thepage}
+\rfoot{\small \textsc {Page \thepage\ of \pageref{LastPage}}}
+\renewcommand{\footrulewidth}{0.5pt}
+\setlength{\headheight}{14pt}
+
+
+%%FINDING ENV
+\newcounter{findingctr}
+
+\newenvironment{finding}{%      define a custom environment
+	\refstepcounter{findingctr}% increment the environment's counter
+	\begin{tcolorbox}
+	\textbf{Finding \thefindingctr:}
+}{\end{tcolorbox}} 
+% If you want numbers that start with the chapter or section number (e.g. 7.1.1 or 7.1) enable the following lines 
+%\usepackage{amsmath}
+%\numberwithin{findingctr}{chapter}
+
+
+% Decrease the size of all these lists
+\setlist{noitemsep,topsep=4pt,parsep=1pt,partopsep=4pt}
+
+
+\lstset{
+	basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+	breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+	breaklines=true,                 % sets automatic line breaking
+	captionpos=b,                    % sets the caption-position to bottom
+	frame=single,                    % adds a frame around the code
+	language=Java,                 % the language of the code
+	keywordstyle=\bf,
+	tabsize=2                       % sets default tabsize to 2 spaces
+}
+
+%make it fit more nicely
+\setlength\extrarowheight{2pt}
