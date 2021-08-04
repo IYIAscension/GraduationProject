@@ -75,7 +75,7 @@ We divide each source projects into training and validation groups to reflect th
 Depending on the amount of mutants per project we might not achieve a perfect 80/20 ratio.
 The division of the mutants is be done randomly. 
 To make our results reproducible we select a random division based on a generated seed.
-The seeds generated for each run will be included in the results and can be found in the Github repository\cite{rbasarat-repo}.
+The seeds generated for each run will be included in the results and can be found in the Github repository in the file \textit{hierarchical-clustering/main.py} at line 182\cite{rbasarat-repo}.
 
 \section{Implementation of algorithm}
 \label{ch:fcm_implementation}
@@ -95,7 +95,7 @@ The \acrshort{fcm} algorithm has to initialize the centroids of the clusters.
 The library we selected does this based on a random number.
 It also allows us to control this random number.
 To make the initialization of the centroid reproducible we will use the same generated seeds as in our first experiment.
-The seeds generated are included in the Github repository\cite{rbasarat-repo}.
+The seeds generated are included in the Github repository in the file \textit{hierarchical-clustering/main.py} at line 182\cite{rbasarat-repo}.
 \newline
 Bezdek et al., also researched cluster validity for the \acrshort{fcm} model\cite{Bezdek1995OnModel}.
 They researched what effect which parameters could have on the validity of the clusters.

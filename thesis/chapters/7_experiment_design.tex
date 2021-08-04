@@ -10,6 +10,8 @@ We execute the following steps:
     \item Execute one random mutant per cluster and gather result.
     \item Calculate weighted mutation score.
 \end{enumerate}
+Both research questions have the same goal, but with different approaches.
+We can devise one hypothesis for both research questions.
 We hypothesise that we can cluster mutants with the set of characteristics we identified
 while maintaining effectiveness and reducing the amount executed when executing one mutant from each cluster that is randomly selected.
 Our goal is to achieve a weighted mutation score that is as close as possible to the mutation score of a full set of executed mutants.
@@ -78,7 +80,7 @@ To validate our sample we make use of statistical hypothesis testing\cite{Emmert
 To test this hypothesis we select an alpha value of 0.05.
 To translate; if more than five percent of the values in a sample deviates more than the significance level(see Chapter \ref{ch:exp1_validation}) we cannot reject the null hypothesis.
 To make our results reproducible we select the random mutant based on a generated seed.
-The seed generated for each run will be included in the results and can be found in the Github repository\cite{rbasarat-repo}.
+The seed generated for each run will be included in the results and can be found in the Github repository in the file \textit{hierarchical-clustering/main.py} at line 182\cite{rbasarat-repo}.
 We repeat our experiment 30 times with 30 different seeds.
 Achieving consistent results while applying random selection contributes to the validity of the experiment.
 

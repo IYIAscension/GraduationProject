@@ -50,8 +50,8 @@ At the time of writing this thesis these studies are at least four years old.
 Some of the tools were updated or are still under active development\cite{pit-releases,Major}.
 \newline
 There are three candidate tools; Major, MuJava and PIT.
-We extended the existing mutant operator comparison for these tools with the operators that have been added since the publishing date of the literature.
-We also researched the overlap for the new mutant operators.
+We extend the existing mutant operator comparison for these tools with the operators that have been added since the publishing date of the literature.
+We also research the overlap for the new mutant operators.
 Table \ref{tab:mutators-current} shows the mutant operators that were developed after the publication of the literature. The amount of mutant operators for  MuJava and PIT have increased significantly while there were no new mutant operators for Major.
 \begin{table}[htb]
 \centering
@@ -115,10 +115,10 @@ COD  & Conditional Operator   Deletion             & RC                   & Remo
 \end{tabular}
 \caption{\label{tab:mutators-overlap}Overview of mutator overlaps between  MuJavav and PIT}
 \end{table}
-Next we tried to generate mutants with all three tools. 
+Next we try to generate mutants with all three tools. 
 All of the sources that we used for generating mutants are build with the build tools Maven or Gradle. 
 Marki and Lindstrom\cite{Marki2017MutationJava} mention that Major includes support for Maven, but it is not documented anywhere.
-For this reason we could not generate mutants with Major.
+For this reason we can not generate mutants with Major.
 Table \ref{tab:mutants-generated} shows the amount of mutants generated per project and per tool. The results show that in all of the cases PIT generates more mutants than MuJava. In some cases the difference is significant. This difference can partially be explained by the fact that MuJava does not support source projects with Java version 1.7 or higher\cite{mujava}. All the code that uses the of features from this version of Java and above resulted in an error during mutant generation.
 
 \begin{table}[htb]
@@ -149,7 +149,7 @@ Commons-csv                    & 1.8.0             & 1855                       
 \end{table}
 \newpage
 \section{Selecting mutation testing tool}
-We have studied literature on three different tools and extended the research with the current state of the art.
+We studied literature on three different tools and extended the research with the current state of the art.
 MuJava is not actively maintained and has not been updated in the last few years.
 It does not support JUnit 4 and all versions of TestNG\cite{mujava}.
 These are test engines and are crucial for executing tests.
@@ -165,5 +165,5 @@ PIT targets the industry, is actively maintained and is open source\cite{Kintis2
 It supports Maven, Gradle, has a \acrfull{cli} and has a faster execution time than the other tools.
 For example PIT provides a plugin system in which you can inject your own code in various stages of mutation testing process\cite{pit}.
 PIT also generated significantly more mutants in every project we have tested.
-Based on the information presented in this chapter we decided that PIT would be the best choice for generating and executing mutants.
+Based on the information presented in this chapter we decide that PIT is the best choice for generating and executing mutants.
 \end{document}
