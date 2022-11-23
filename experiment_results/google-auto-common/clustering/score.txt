@@ -1,6 +1,0 @@
-Clusters killed: 2357, Total Clusters: 1043
-Clusters killed: 2477, Total Clusters: 1043
-Clusters killed: 3776, Total Clusters: 521
-Clusters killed: 3677, Total Clusters: 260
-Clusters killed: 2871, Total Clusters: 1304
-Clusters killed: 3067, Total Clusters: 2609
