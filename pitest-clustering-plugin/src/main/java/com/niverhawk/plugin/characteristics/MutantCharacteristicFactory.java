@@ -27,7 +27,7 @@ public class MutantCharacteristicFactory implements MutationInterceptorFactory {
             Files.createDirectories(clusterDir);
             outFile = clusterDir.resolve("characteristics.csv").toAbsolutePath().toString();
             FileWriter csvWriter = new FileWriter(outFile, false);
-            String header = "id,mutOperator,opcode,returnType,localVarsCount,isInTryCatch,isInFinalBlock,className,methodName,blockNumber,lineNumber\n";
+            String header = "id,mutOperator,opcode,returnType,localVarsCount,isInTryCatch,isInFinalBlock,className,methodName,blockNumber,lineNumber,numTests\n";
             csvWriter.append(header);
             csvWriter.flush();
             csvWriter.close();

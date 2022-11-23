@@ -25,7 +25,7 @@ public class PluginService {
                 String line = scanner.nextLine();
                 String[] id = line.split(",");
 
-                result.put(id[0], Integer.parseInt(id[2]));
+                result.put(id[1], Integer.parseInt(id[2]));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

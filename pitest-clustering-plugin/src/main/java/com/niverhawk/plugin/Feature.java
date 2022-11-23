@@ -32,10 +32,10 @@ public class Feature {
         this.returnType = returnType;
         this.localVarsCount = localVarsCount;
         this.isInTryCatch = tryCatchBlocks;
-        this.isInFinalBlock = details.isInFinallyBlock();
+        this.isInFinalBlock = false;
         this.className = details.getClassName().asJavaName();
-        this.methodName = details.getMethod().name();
-        this.blockNumber = details.getBlock();
+        this.methodName = details.getMethod();
+        this.blockNumber = 0;
         this.lineNumber = details.getClassLine().getLineNumber();
 
     }
