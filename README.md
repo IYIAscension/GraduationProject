@@ -8,14 +8,14 @@
 * Tables: Tables fed to PowerBI, created by outputsToTables.py.
 * Theis: Contains submitted thesis in .tex form with files necessary for compilation. Also contains thesis in .pdf form.
 * Timings: Contains tables made for chapter 3, the time analysis. Files were written by cmtTimeAnalysis.ipynb
-* cmtImprovement.ipynb: Code for chapter 4. Made to calculate the impact more rigorous pre-processing and center selection has on the precision of [CMT](https://github.com/Rbasarat/thesis-mutation-testing/)
+* cmtImprovement.ipynb: Code for chapter 4. Made to calculate the impact more rigorous pre-processing and center selection has on the precision of [CMT](https://github.com/Rbasarat/thesis-mutation-testing/).
 * cpmt.ipynb: Code for chapter 5, implements Contextual Predictive Mutation Testing and calculates the precision of original and 3-projects training variant.
 * cpmt3DClustering.ipynb: Variant of cpmt.ipynb which clusters 1D features using 3D clustering algorithms, reasoning discussed in chapter 5.
 * cpmtClusterSelection.ipynb: Variant of cpmt.ipynb which replaces the sampleSelector() function with that of CMT(Center Selection variant).
 * cpmtClusterSelection.ipynbWeighted: Not discussed in thesis. Variant of cpmtClusterSelection, but with changes to the pkScoreTransformer() function. In this version, the similarity of mutants is taken into account for pk-score calculations.
 * nmt.ipynb: Only mentioned in thesis. Implements new algorithm: "Network Mutation Testing". More detailed explanation given inside file.
 * outputsToTables: Used to create the tables in "Tables" folder. Not intended for public use, messy code. Does contain Central Limit Theorem/Mann-Whitney U test.
-* timingsToGraphs.ipynb: Used to create the graphs for the time analysis seen in "Graphs" folder.
+* timingsToGraphs.ipynb: Used to create the graphs for the time analysis seen in "Graphs" folder. Also not intended for public use.
 
 ## Pitest-Clustering-Plugin user guide:
 Original contained following features:
