@@ -1,7 +1,7 @@
 
-## Mutation testing: "Clustered" and "Contextual Predictive" approaches analysed
+# Mutation testing: "Clustered" and "Contextual Predictive" approaches analysed
 
-# File/folder explanations:
+## File/folder explanations:
 * Graphs: Contains the graphs that were used in the thesis. Most were made in PowerBI. Time Analysis graphs were made by timingsToGraphs.ipynb
 * Pitest-Clustering-Plugin: Imported from [Basarat's work](https://github.com/Rbasarat/thesis-mutation-testing/), slightly tweaked. User guide below.
 * Projects: Imported from [Basarat's work](https://github.com/Rbasarat/thesis-mutation-testing/). Used for chapter 4 and 5 in my thesis. Time analysis required raw projects and are therefore only saved locally.
@@ -17,7 +17,7 @@
 * outputsToTables: Used to create the tables in "Tables" folder. Not intended for public use, messy code. Does contain Central Limit Theorem/Mann-Whitney U test.
 * timingsToGraphs.ipynb: Used to create the graphs for the time analysis seen in "Graphs" folder.
 
-# Pitest-Clustering-Plugin user guide:
+## Pitest-Clustering-Plugin user guide:
 Original contained following features:
 
 * Similarity: calculates the Levenshtein distance between each mutation and the original class it was based on.
