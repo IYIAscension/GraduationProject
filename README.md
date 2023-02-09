@@ -30,10 +30,10 @@ We removed the Similarity feature, because in its current state, it is too time 
 Below is how to use each feature. Make sure maven and plugin are installed. The pom.xml of the project must contain the code given below the feature usage explanations for all features to work. If you have yet to compile a projects test, use "mvn test-compile ...". If you want verbose output, use -verbose flag. 
 
 * Characteristics: "mvn -Drat.skip=true -Dfeatures=+characteristics org.pitest:pitest-maven:mutationCoverage"
-* Clustering: "mvn -Drat.skip=true -Dfeatures=+cluster" org.pitest:pitest-maven:mutationCoverage". Requires "cluster.csv" in <project folder>/target/pit-reports/clustering with cluster ID, mutant ID pairs. cmtTimeAnalysis.ipynb produces this.
-* Report: ON BY DEFAULT, to remove: remove "<outputFormat>MUTANTKILLEDREPORT</outputFormat>" and "<outputFormat>CLUSTERINGREPORT</outputFormat>" from code below.
+* Clustering: "mvn -Drat.skip=true -Dfeatures=+cluster" org.pitest:pitest-maven:mutationCoverage". Requires "cluster.csv" in "project folder"/target/pit-reports/clustering with cluster ID, mutant ID pairs. cmtTimeAnalysis.ipynb produces this.
+* Report: ON BY DEFAULT, to remove: remove `<outputFormat>MUTANTKILLEDREPORT</outputFormat>` and `<outputFormat>CLUSTERINGREPORT</outputFormat>` from code below.
 
-Inside <project><build><pluginManagement><plugins>:
+Inside `<project><build><pluginManagement><plugins>`:
 ```
         <plugin>
           <groupId>org.pitest</groupId>
@@ -67,7 +67,7 @@ Inside <project><build><pluginManagement><plugins>:
           </configuration>
         </plugin>
 ```
-Inside <project><dependencies>:
+Inside `<project><dependencies>`:
 ```
     <dependency>
       <groupId>org.junit.jupiter</groupId>
