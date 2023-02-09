@@ -1,1 +1,0 @@
-# thesis-mutation-testing-Adam
