@@ -1,5 +1,5 @@
 
-## Mutation testing: ``Clustered'' and ``Contextual Predictive'' approaches analysed
+## Mutation testing: "Clustered" and "Contextual Predictive" approaches analysed
 
 # File/folder explanations:
 * Graphs: Contains the graphs that were used in the thesis. Most were made in PowerBI. Time Analysis graphs were made by timingsToGraphs.ipynb
